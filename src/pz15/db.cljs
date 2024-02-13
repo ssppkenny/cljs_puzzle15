@@ -1,16 +1,14 @@
 (ns pz15.db
   (:require
    [clojure.set :refer [map-invert]]
+   [pz15.walkdist :as wd]
    [shadow.resource :as rc]
    [cljs.reader :as rdr]))
 
-(defn read-dists []
-  (.log js/console "log")
-  (let [f (rc/inline "pz15/data.edn")]
-    (rdr/read-string f)))
 
 (defonce dists
-  (read-dists))
+  wd/dists
+  )
 
 (defonce ^:const UP 1)
 
