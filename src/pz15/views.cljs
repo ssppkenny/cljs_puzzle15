@@ -70,27 +70,30 @@
         (fn []
           (let [show-progress @solving]
             [:div.main-container
-             [:div.title-box [:div.title [:span {:style {:font-size "25px"}} "15 Puzzle"]]
-              [:div.game-box
-               (for [l (:board @field)]
-                 ^{:key (random-uuid)} [:div.row (for [[n i] l]
-                                                   ^{:key (random-uuid)} [:div.cell
-                                                                          (if (not (= n 0))
-                                                                            [:img {:src (str "images/t" n ".png") :width "50px" :height "50px"}]
-                                                                            [:img {:src "images/empty.png" :width "50px" :height "50px"}])])])]
-
-              [:div {:style {:display "inline-block"}}
-               (if show-progress [:img {:src "images/wait.gif" :width "30px"}] [:div])]
-              [:div (if (= @field bfs/target-state) "Solved!!!" "")]
-              [:div {:style {:display "block"}}
-               [:img {:src "images/up.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-up 1]))}]
-               [:img {:src "images/down.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-down 1]))}]
-               [:img {:src "images/left.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-left 1]))}]
-               [:img {:src "images/right.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-right 1]))}]]
-              [:div {:style {:text-align "center"}}
-               [:img {:src "images/solve.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/new-solve 1]))}]
-               [:span "Press s to solve"]
-               [:p]
-               [:img {:src "images/space.png" :width "150px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/shuffle 1]))}]
-               [:p]
-               [:span "Press space to shuffle"]]]]))}))))
+             [:div.title-box
+              [:div.title [:span "15 Puzzle"]]]
+             [:div.game-box
+              (for [l (:board @field)]
+                ^{:key (random-uuid)}
+                [:div.row
+                 (for [[n i] l]
+                   ^{:key (random-uuid)}
+                   [:div.cell
+                    (if (not (= n 0))
+                      [:img {:src (str "images/t" n ".png") :width "50px" :height "50px"}]
+                      [:img {:src "images/empty.png" :width "50px" :height "50px"}])])])]
+             [:div.status
+              (if show-progress [:img {:src "images/wait.gif" :width "30px"}] [:div])
+              [:span (if (= @field bfs/target-state) "Solved!!!" "")]]
+             [:div.controls
+              [:img {:src "images/up.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-up 1]))}]
+              [:img {:src "images/down.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-down 1]))}]
+              [:img {:src "images/left.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-left 1]))}]
+              [:img {:src "images/right.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-right 1]))}]]
+             [:div.actions
+              [:img {:src "images/solve.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/new-solve 1]))}]
+              [:span "Press s to solve"]
+              [:br]
+              [:img {:src "images/space.png" :width "150px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/shuffle 1]))}]
+              [:br]
+              [:span "Press space to shuffle"]]]))}))))
