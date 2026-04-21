@@ -113,16 +113,21 @@
               :solution []
               :solving false
               :need-to-solve false
-              :bfs-state nil)))
+              :bfs-state nil
+              :solve-start-time nil
+              :solve-end-time nil)))
 
 (re-frame/reg-event-fx
   ::new-solve
   (fn [{:keys [db]} _]
     (if (not (:solving db))
-      {:db (assoc db :solving true
-                  :need-to-solve true
-                  :solution []
-                  :bfs-state nil)
+      {:db (-> db
+               (assoc :solving true
+                      :need-to-solve true
+                      :solution []
+                      :bfs-state nil
+                      :solve-start-time (js/Date.now)
+                      :solve-end-time nil))
        :dispatch [::do-new-solve]}
       {:db db})))
 
@@ -171,9 +176,12 @@
 (re-frame/reg-event-db
   ::stop-solve
   (fn [db _]
-    (assoc db :solving false :need-to-solve false)))
+    (assoc db :solving false :need-to-solve false :solve-end-time (js/Date.now))))
 
 (re-frame/reg-event-db
   ::timeout-solved
   (fn [db _]
-    (assoc db :solving false :need-to-solve false)))
+    (assoc db
+           :solving false
+           :need-to-solve false
+           :solve-end-time (js/Date.now))))

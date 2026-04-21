@@ -113,7 +113,17 @@
                  (map-indexed (fn [i l] ^{:key i} [render-row board zero dragged-tile l]) board))
            [:div.status
             (if show-progress [:img {:src "images/wait.gif" :width "30px"}] [:div])
-            [:span (if (= @state bfs/target-state) "Solved!!!" "")]]
+             (let [start-time (re-frame/subscribe [::subs/solve-start-time])
+                   end-time   (re-frame/subscribe [::subs/solve-end-time])]
+               (cond
+                 (and (= @state bfs/target-state) @end-time @start-time)
+                 (let [dt (js/Math.round (* 10 (/ (- @end-time @start-time) 1000))) ; deci-seconds
+                       sec (/ dt 10)]
+                   [:span (str "Solved in " sec " seconds")])
+                 (= @state bfs/target-state)
+                 [:span "Solved!!!"]
+                 :else
+                 [:span ""]))]
            [:div.controls
             [:img {:src "images/up.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-up 1]))}]
             [:img {:src "images/down.jpg" :width "50px" :on-click (fn [e] (.preventDefault e) (re-frame/dispatch [::events/key-down 1]))}]

@@ -30,9 +30,19 @@
    (:solution db)))
 
 (re-frame/reg-sub
- ::state
- (fn [db]
-   (:state db)))
+  ::state
+  (fn [db]
+    (:state db)))
+
+(re-frame/reg-sub
+  ::solve-start-time
+  (fn [db]
+    (:solve-start-time db)))
+
+(re-frame/reg-sub
+  ::solve-end-time
+  (fn [db]
+    (:solve-end-time db)))
 
 (re-frame/reg-sub
  ::re-pressed-example
