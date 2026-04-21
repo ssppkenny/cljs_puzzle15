@@ -219,3 +219,21 @@
  (fn [_ _]
    db/default-db))
 
+(re-frame/reg-event-db
+  ::move-tile
+  (fn [db [_ tile-number]]
+    (let [state    (:state db)
+          board    (:board state)
+          zero     (:zero state)
+          zero-col (get (nth board zero) 0)
+          tile-row (first (keep-indexed (fn [i row] (when (contains? row tile-number) i)) board))
+          tile-col (get (nth board tile-row) tile-number)
+          direction (cond
+                      (and (= tile-col zero-col) (= tile-row (+ zero 1))) db/UP
+                      (and (= tile-col zero-col) (= tile-row (- zero 1))) db/DOWN
+                      (and (= tile-row zero) (= tile-col (+ zero-col 1))) db/LEFT
+                      (and (= tile-row zero) (= tile-col (- zero-col 1))) db/RIGHT)]
+      (if (and direction (not (:solving db)))
+        (assoc db :state (db/next-state-for-action state direction))
+        db))))
+

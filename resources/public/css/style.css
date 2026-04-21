@@ -85,3 +85,16 @@ body {
   font-size: 13px;
   color: #555;
 }
+
+.cell.draggable {
+  cursor: grab;
+}
+
+.cell.draggable:active {
+  cursor: grabbing;
+}
+
+.cell.drop-target {
+  background: #e8e8e8;
+}
+
