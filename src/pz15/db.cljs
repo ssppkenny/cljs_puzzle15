@@ -118,4 +118,5 @@
    :state (random-state)
    :solution []
    :solving false
-   :need-to-solve false})
+   :need-to-solve false
+   :bfs-state nil})

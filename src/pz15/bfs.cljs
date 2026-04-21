@@ -163,6 +163,32 @@
 ;  )
 
 
+;; --- CHUNKED/INCREMENTAL SOLVER ---
+(defn bfs-init [start-state]
+  (let [start-node {:state start-state :length 0}
+        p (pm/priority-map start-node 0)
+        r {start-state start-node}]
+    {:p p :r r :done? false :solution nil}))
+
+(defn bfs-step
+  ([state] (bfs-step state 10))
+  ([{:keys [p r] :as bfs-state} chunk-size]
+   (loop [step 0 p p r r]
+     (cond
+       (empty? p)
+       (assoc bfs-state :done? true :solution nil)
+       :else
+       (let [n (nth (peek p) 0)]
+         (if (= target-state (:state n))
+           (assoc bfs-state :done? true :solution (node-to-list n))
+           (if (>= step (dec chunk-size))
+             {:p p :r r :done? false :solution nil}
+             (let [next-result (expand-with-dists n r (pop p))
+                   new-r (:reached next-result)
+                   new-p (:queue next-result)]
+               (recur (inc step) new-p new-r)))))))))
+
+;; --- ORIGINAL synchronous solver (kept for reference) ---
 (defn bfs [start-state]
   (let [start-node {:state start-state :length 0}
         q (pm/priority-map start-node 0)
